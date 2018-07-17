@@ -29,7 +29,7 @@ def textgenrnn_model(num_classes, cfg, context_size=None,
         rnn_layer_list.append(new_rnn(cfg, i+1)(prev_layer))
 
     seq_concat = concatenate([embedded] + rnn_layer_list, name='rnn_concat')
-    attention = AttentionWeightedAverage(name='attention')(seq_concat)
+    attention = AttentionWeightedAverage(name='attention', return_attention=True)(seq_concat)[0]
     output = Dense(num_classes, name='output', activation='softmax')(attention)
 
     if context_size is None:

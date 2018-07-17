@@ -122,6 +122,10 @@ class textgenrnn:
         if 'prop_keep' in kwargs:
             train_size = prop_keep
 
+        arg_callbacks = []
+        if 'callbacks' in kwargs:
+            arg_callbacks = kwargs.pop('callbacks')
+
         if self.config['word_level']:
             texts = [text_to_word_sequence(text, filters='') for text in texts]
 
@@ -180,7 +184,7 @@ class textgenrnn:
 
         self.model.fit_generator(gen, steps_per_epoch=steps_per_epoch,
                                  epochs=num_epochs,
-                                 callbacks=[
+                                 callbacks=arg_callbacks + [
                                      LearningRateScheduler(
                                          lr_linear_decay),
                                      generate_after_epoch(
@@ -204,6 +208,10 @@ class textgenrnn:
                         validation=True, **kwargs):
         self.config = self.default_config.copy()
         self.config.update(**kwargs)
+
+        # TODO: workaround to avoid attempt to dump callbacks to _config.json --
+        # callbacks aren't easily JSON serializable
+        self.config['callbacks'] = [] #[fn.__dict__ for fn in self.config['callbacks']]
 
         print("Training new model w/ {}-layer, {}-cell {}LSTMs".format(
             self.config['rnn_layers'], self.config['rnn_size'],

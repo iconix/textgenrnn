@@ -1,5 +1,11 @@
 # textgenrnn
 
+Changes in this fork:
+- `return_attention` from model so that one can observe the weights
+- allow custom callbacks in `train_new_model`
+
+---
+
 ![dank text](/docs/textgenrnn_console.gif)
 
 Easily train your own text-generating neural network of any size and complexity on any text dataset with a few lines of code, or quickly train on a text using a pretrained model.
